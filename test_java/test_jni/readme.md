@@ -20,14 +20,18 @@ public native String TestString(String str);
 4. 生成so文件
 `g++ -fpic -shared -o libtest.so JNIDemo.cpp -I/usr/lib/jvm/java-7-openjdk-i386/include`
 `g++ -fpic -shared -o libtest.so JNIDemo.cpp -I /usr/lib/jvm/java-1.8.0-openjdk/include/   -I /usr/lib/jvm/java-1.8.0-openjdk/include/linux/`
+` g++ -fpic -shared -o libtest.so JNIDemo.cpp -I /usr/lib/jvm/java-8-openjdk-amd64/include/   -I /usr/lib/jvm/java-1.8.0-openjdk-amd64/include/linux`
 
 5. 编译JAVA
 `javac JNIDemo.java`
 
-6. 运行JAVA
+6. 查看成员变量和方法签名
+`javap -s -p JNIDemo`
+
+7. 运行JAVA
 `java JNIDemo`
 
-7. 运行结果
+8. 运行结果
 ```
 before call JNI
 [JNI] ==> Java_JNIDemo_TestString calling JNI str:[javastr]

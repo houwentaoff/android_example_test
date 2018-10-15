@@ -19,11 +19,11 @@ JNIEXPORT jstring JNICALL Java_JNIDemo_TestString
  */
 JNIEXPORT jstring JNICALL native_hello(JNIEnv *env, jclass clazz) 
 { 
-    printf("hello in c native code./n"); 
+    printf("hello in c++ native code.\n"); 
     return env->NewStringUTF("hello world returned."); 
 } 
 // 指定要注册的类
-#define JNIREG_CLASS "testjni/JavaDemo"
+#define JNIREG_CLASS "JNIDemo"
 // 定义一个JNINativeMethod数组，其中的成员就是Java代码中对应的native方法
 static JNINativeMethod gMethods[] = {
         { "hello", "()Ljava/lang/String;", (void*)native_hello},
