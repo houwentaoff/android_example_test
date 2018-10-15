@@ -19,6 +19,7 @@ public native String TestString(String str);
 
 4. 生成so文件
 `g++ -fpic -shared -o libtest.so JNIDemo.cpp -I/usr/lib/jvm/java-7-openjdk-i386/include`
+`g++ -fpic -shared -o libtest.so JNIDemo.cpp -I /usr/lib/jvm/java-1.8.0-openjdk/include/   -I /usr/lib/jvm/java-1.8.0-openjdk/include/linux/`
 
 5. 编译JAVA
 `javac JNIDemo.java`

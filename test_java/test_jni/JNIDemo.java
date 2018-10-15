@@ -1,3 +1,5 @@
+package testjni;
+
 import java.net.*;//URI所在包
 import java.io.*;//File所在包
 
@@ -18,6 +20,7 @@ public class JNIDemo {
     }
     //JNI API
     public native String TestString(String str);
+    public native String hello();
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         JNIDemo j = new JNIDemo();
@@ -30,5 +33,7 @@ public class JNIDemo {
         System.out.println("ret["+ s + "]");
         //String enctypt=j.desEncode(user);
         //System.out.println(enctypt);
+        
+        j.hello();
     }
 }
