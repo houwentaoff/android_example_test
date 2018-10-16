@@ -24,9 +24,14 @@ public class JNIDemo {
             System.out.println("Got a Exception：" + e.getMessage());
         }
     }
+    int[] array = {1,2,3,4,5};
     //JNI API
     public native String TestString(String str);
     public native String hello();
+    public native void EncodeArray(int[] arr);
+    public native void SendCmd(byte[] cmd);
+    public native byte[] RecvCmd();
+
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         JNIDemo j = new JNIDemo();
@@ -42,5 +47,26 @@ public class JNIDemo {
         
         str = j.hello();
         System.out.println(str);
+
+        j.EncodeArray(j.array);
+        for (int i : j.array) {
+            System.out.printf("%d ", i);
+        }
+        System.out.println("");
+        byte[] cmd = {1,2,3,4,5, 6};
+        j.SendCmd(cmd);
+        byte []recvBuf =  j.RecvCmd();
+        if (recvBuf.length == 0)
+        {
+            System.out.println("未收到响应!");
+        }
+        else
+        {
+            System.out.println("收到响应!");
+            for (byte i : recvBuf){
+                System.out.printf("0x%x ", i);
+            }
+            System.out.println("");
+        }
     }
 }
