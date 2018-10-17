@@ -25,13 +25,27 @@ public class JNIDemo {
         }
     }
     int[] array = {1,2,3,4,5};
+    //call back
+    private int onProgressCallBack(long total, long over)
+    {
+        System.out.println("total:" + total + " over:" + over);
+        double per = (over*1.0)/(total);
+        System.out.println("%" +  per * 100);
+        return 0;
+    }
     //JNI API
     public native String TestString(String str);
     public native String hello();
     public native void EncodeArray(int[] arr);
     public native void SendCmd(byte[] cmd);
     public native byte[] RecvCmd();
-
+    public native void MulThreadDL();
+    private native void downLoad();
+    
+    public void DL()
+    {
+        downLoad();
+    }
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         JNIDemo j = new JNIDemo();
@@ -67,6 +81,15 @@ public class JNIDemo {
                 System.out.printf("0x%x ", i);
             }
             System.out.println("");
+        }
+        j.DL();
+        j.MulThreadDL();
+        try
+        {
+            Thread.sleep(10000); 
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace(); 
         }
     }
 }

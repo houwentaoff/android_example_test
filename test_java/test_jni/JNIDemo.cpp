@@ -2,6 +2,12 @@
 #include "stdlib.h"
 #include <jni.h>
 #include <assert.h>
+#include <thread>
+#include <unistd.h>
+#include <stdio.h>
+
+JavaVM *g_VM;
+jobject g_obj;
 
 JNIEXPORT jstring JNICALL Java_JNIDemo_TestString
   (JNIEnv *env, jobject obj, jstring jstr){
@@ -63,6 +69,62 @@ JNIEXPORT jbyteArray JNICALL RecvCmd(JNIEnv *env, jobject jobj)
     env->ReleaseByteArrayElements(jbytes, elems, 0);
     return jbytes;
 }
+JNIEXPORT void JNICALL Download(JNIEnv *env, jobject jobj) 
+{
+    jclass jSdkClass; 
+    jSdkClass =env->GetObjectClass(jobj);
+    if (jSdkClass == NULL)
+    {
+        printf("unable to find class\n");
+        return;
+    }
+    jmethodID javaCallback = env->GetMethodID(jSdkClass,
+            "onProgressCallBack", "(JJ)I");
+    jint ret = env->CallIntMethod(jobj, javaCallback, 5, 1);
+    return;
+}
+void *func(void *data)
+{
+    JNIEnv *env = NULL;
+    ::sleep(3);
+    int envStat = g_VM->GetEnv((void **) &env,  JNI_VERSION_1_4);
+    if (envStat == JNI_EDETACHED)
+    {
+        if (g_VM->AttachCurrentThread((void **)&env, NULL))
+        {
+            return NULL;
+        }
+    }
+    jclass javaClass = env->GetObjectClass(g_obj);
+    if (javaClass == 0)
+    {
+        g_VM->DetachCurrentThread();
+        return NULL;
+    }
+    //该方法可以为java中的接口，这样只要实现了该接口就能进行回调
+    //不用知道每个类要回调的方法的名字
+    jmethodID javaCallback = env->GetMethodID(javaClass,
+            "onProgressCallBack", "(JJ)I");
+    long total = 7;
+    long over = 0;
+    do 
+    {
+        jint ret = env->CallIntMethod(g_obj, javaCallback, total, over);
+        sleep(1);
+    }
+    while (total > over++);
+    g_VM->DetachCurrentThread();
+    return NULL;
+}
+JNIEXPORT void JNICALL MulThreadDownload(JNIEnv *env, jobject jobj) 
+{
+    std::thread tid;
+    env->GetJavaVM(&g_VM);
+    // 生成一个全局引用保留下来，以便回调
+    g_obj = env->NewGlobalRef(jobj);
+    tid = std::thread(func, nullptr);
+    tid.detach();
+}
 // 指定要注册的类
 #define JNIREG_CLASS "JNIDemo"
 // 定义一个JNINativeMethod数组，其中的成员就是Java代码中对应的native方法
@@ -72,6 +134,8 @@ static JNINativeMethod gMethods[] = {
         { "EncodeArray", "([I)V", (void*)test_array},
         { "SendCmd", "([B)V", (void*)SendCmd},
         { "RecvCmd", "()[B", (void*)RecvCmd},
+        { "downLoad", "()V", (void*)Download},
+        { "MulThreadDL", "()V", (void*)MulThreadDownload},
 };
 static int registerNativeMethods(JNIEnv* env, const char* className, JNINativeMethod* gMethods, int numMethods) 
 { 

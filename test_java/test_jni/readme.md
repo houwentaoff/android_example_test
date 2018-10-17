@@ -18,10 +18,10 @@ public native String TestString(String str);
 将2中生成的h文件中的声明copy到cpp中并实现
 
 4. 生成so文件
-`g++ -fpic -shared -o libtest.so JNIDemo.cpp -I/usr/lib/jvm/java-7-openjdk-i386/include`
-centos7 `g++ -fpic -shared -o libtest.so JNIDemo.cpp -I /usr/lib/jvm/java-1.8.0-openjdk/include/   -I /usr/lib/jvm/java-1.8.0-openjdk/include/linux/`
+`g++ -fpic -shared -o libtest.so JNIDemo.cpp -I/usr/lib/jvm/java-7-openjdk-i386/include -std=c++11`
+centos7 `g++ -fpic -shared -o libtest.so JNIDemo.cpp -I /usr/lib/jvm/java-1.8.0-openjdk/include/   -I /usr/lib/jvm/java-1.8.0-openjdk/include/linux/ -std=c++11`
 
-ubuntu16.04 `g++ -fpic -shared -o libtest.so JNIDemo.cpp -I /usr/lib/jvm/java-8-openjdk-amd64/include/   -I /usr/lib/jvm/java-1.8.0-openjdk-amd64/include/linux`
+ubuntu16.04 `g++ -fpic -shared -o libtest.so JNIDemo.cpp -I /usr/lib/jvm/java-8-openjdk-amd64/include/   -I /usr/lib/jvm/java-1.8.0-openjdk-amd64/include/linux -std=c++11`
 
 5. 编译JAVA
 `javac JNIDemo.java`
